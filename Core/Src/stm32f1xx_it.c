@@ -32,7 +32,20 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#include "oled.h"
+#include "string.h"
 
+// 串口2接收相关定义
+#define USART2_MAX_RECV_LEN 256
+#define USART2_MAX_SEND_LEN 256
+
+uint8_t USART2_RX_BUF[USART2_MAX_RECV_LEN];
+volatile uint16_t USART2_RX_STA = 0;
+
+// 蓝牙状态标志位
+extern volatile uint8_t ble_connected;
+extern volatile uint8_t ble_disconnected;
+extern volatile uint8_t add_nfc_flag;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -57,6 +70,7 @@
 
 /* External variables --------------------------------------------------------*/
 extern SPI_HandleTypeDef hspi1;
+extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
 
@@ -215,6 +229,20 @@ void SPI1_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles USART2 global interrupt.
+  */
+void USART2_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART2_IRQn 0 */
+
+  /* USER CODE END USART2_IRQn 0 */
+  HAL_UART_IRQHandler(&huart2);
+  /* USER CODE BEGIN USART2_IRQn 1 */
+
+  /* USER CODE END USART2_IRQn 1 */
+}
+
+/**
   * @brief This function handles USART3 global interrupt.
   */
 void USART3_IRQHandler(void)
@@ -229,25 +257,83 @@ void USART3_IRQHandler(void)
 
 /* USER CODE BEGIN 1 */
 /**
-  * @brief  UART������ɻص�����
-  * @param  huart: UART���
+  * @brief  UART������ɻص�����
+  * @param  huart: UART���
   * @retval None
   */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart == &huart3)
     {
-        if ((USART3_RX_STA & 0x8000) == 0) // ����δ���
+        if ((USART3_RX_STA & 0x8000) == 0) // ����δ���
         {
-            if (USART3_RX_STA < USART3_MAX_RECV_LEN) // ������δ��
+            if (USART3_RX_STA < USART3_MAX_RECV_LEN) // ������δ��
             {
-                USART3_RX_STA++; // ���ճ���+1
-                // ����������һ���ֽ�
+                USART3_RX_STA++; // ���ճ���+1
+                // ����������һ���ֽ�
                 HAL_UART_Receive_IT(&huart3, &USART3_RX_BUF[USART3_RX_STA], 1);
             }
             else
             {
-                USART3_RX_STA |= 0x8000; // ��ǽ������
+                USART3_RX_STA |= 0x8000; // ��ǽ������
+            }
+        }
+    }
+    else if (huart == &huart2)
+    {
+        if ((USART2_RX_STA & 0x8000) == 0) // ����δ���
+        {
+            if (USART2_RX_STA < USART2_MAX_RECV_LEN) // ������δ��
+            {
+                USART2_RX_STA++; // ���ճ���+1
+                // ����������һ���ֽ�
+                HAL_UART_Receive_IT(&huart2, &USART2_RX_BUF[USART2_RX_STA], 1);
+                
+                // 检查是否接收到"CONNECT OK"
+                if (strstr((char*)USART2_RX_BUF, "CONNECT OK"))
+                {
+                    ble_connected = 1;
+                    // 清空接收缓冲区
+                    memset(USART2_RX_BUF, 0, USART2_MAX_RECV_LEN);
+                    // 重置接收状态
+                    USART2_RX_STA = 0;
+                }
+                
+                // 检查是否接收到"DISCONNECT"或"DISCONNECTED"
+                if (USART2_RX_STA > 0) // 确保有数据
+                {
+                    // 直接检查缓冲区中的内容，不使用strstr
+                    for (uint8_t i = 0; i <= USART2_RX_STA - 8; i++)
+                    {
+                        if (USART2_RX_BUF[i] == 'D' && USART2_RX_BUF[i+1] == 'I' && USART2_RX_BUF[i+2] == 'S' && 
+                            USART2_RX_BUF[i+3] == 'C' && USART2_RX_BUF[i+4] == 'O' && USART2_RX_BUF[i+5] == 'N' && 
+                            USART2_RX_BUF[i+6] == 'N' && USART2_RX_BUF[i+7] == 'E')
+                        {
+                            ble_disconnected = 1;
+                            // 清空接收缓冲区
+                            memset(USART2_RX_BUF, 0, USART2_MAX_RECV_LEN);
+                            // 重置接收状态
+                            USART2_RX_STA = 0;
+                            break;
+                        }
+                    }
+                }
+                // 检查是否接收到"add nfc"
+                if (USART2_RX_STA >= 7) // "add nfc"长度为7
+                {
+                    if (strstr((char*)USART2_RX_BUF, "add nfc"))
+                    {
+                        add_nfc_flag = 1;
+                        // 清空接收缓冲区
+                        memset(USART2_RX_BUF, 0, USART2_MAX_RECV_LEN);
+                        // 重置接收状态
+                        USART2_RX_STA = 0;
+                    }
+                }
+            }
+            else
+            {
+                USART2_RX_STA |= 0x8000; // ��ǽ������
             }
         }
     }

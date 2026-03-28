@@ -34,3 +34,5 @@ mensuo_yangweiye\stm32f1xx_it.o: ../App/AS608.h
 mensuo_yangweiye\stm32f1xx_it.o: ../Core/Inc/usart.h
 mensuo_yangweiye\stm32f1xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 mensuo_yangweiye\stm32f1xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+mensuo_yangweiye\stm32f1xx_it.o: ../App/oled.h
+mensuo_yangweiye\stm32f1xx_it.o: ../Core/Inc/gpio.h
