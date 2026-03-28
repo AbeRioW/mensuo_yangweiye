@@ -54,6 +54,7 @@
 volatile uint8_t ble_connected = 0;
 volatile uint8_t ble_disconnected = 0;
 volatile uint8_t add_nfc_flag = 0;
+volatile uint8_t del_nfc_flag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,6 +64,8 @@ void ReadNFCCardsFromFlash(void);
 uint8_t IsNFCCardRegistered(uint8_t *cardID);
 void SaveNFCCardToFlash(uint8_t *cardID);
 void AddNFCCardMode(void);
+void DelNFCCardMode(void);
+void DelNFCCardFromFlash(uint8_t *cardID);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -202,6 +205,22 @@ int main(void)
       
       // 进入添加NFC卡模式
       AddNFCCardMode();
+    }
+    
+    // 处理删除NFC卡标志
+    if (del_nfc_flag)
+    {
+      // 显示删除NFC卡界面
+      OLED_Clear();
+      OLED_ShowString(0, 0, (uint8_t*)"Delete NFC Card", 8, 1);
+      OLED_ShowString(0, 8, (uint8_t*)"Please approach card", 8, 1);
+      OLED_Refresh();
+      
+      // 清除标志位
+      del_nfc_flag = 0;
+      
+      // 进入删除NFC卡模式
+      DelNFCCardMode();
     }
     
     // 保留RC522功能
@@ -424,6 +443,26 @@ void SaveNFCCardToFlash(uint8_t *cardID)
     }
 }
 
+// 从Flash删除NFC卡ID
+void DelNFCCardFromFlash(uint8_t *cardID)
+{
+    for (uint8_t i = 0; i < nfcCardCount; i++)
+    {
+        if (memcmp(nfcCards[i], cardID, NFC_CARD_SIZE) == 0)
+        {
+            // 找到要删除的卡，将后面的卡向前移动
+            for (uint8_t j = i; j < nfcCardCount - 1; j++)
+            {
+                memcpy(nfcCards[j], nfcCards[j+1], NFC_CARD_SIZE);
+            }
+            nfcCardCount--;
+            
+            // 这里需要实现将数据写入Flash的逻辑
+            break;
+        }
+    }
+}
+
 // 添加NFC卡模式
 void AddNFCCardMode(void)
 {
@@ -464,6 +503,64 @@ void AddNFCCardMode(void)
                     // 显示注册成功
                     OLED_Clear();
                     OLED_ShowString(0, 0, (uint8_t*)"Card Registered", 8, 1);
+                    OLED_ShowString(0, 8, (uint8_t*)idString, 8, 1);
+                    OLED_Refresh();
+                    HAL_Delay(2000);
+                }
+                
+                // 显示主页面
+                OLED_Clear();
+                OLED_ShowString(0, 0, (uint8_t*)"Wait for NFC card", 8, 1);
+                OLED_ShowString(0, 8, (uint8_t*)"Wait for fingerprint", 8, 1);
+                OLED_Refresh();
+                break;
+            }
+        }
+        
+        HAL_Delay(100);
+    }
+}
+
+// 删除NFC卡模式
+void DelNFCCardMode(void)
+{
+    uint8_t status;
+    uint8_t cardType;
+    uint8_t cardID[4];
+    char idString[16];
+    
+    // 等待用户靠近NFC卡
+    while (1)
+    {
+        // 寻找卡片
+        status = PCD_Request(PICC_REQIDL, &cardType);
+        if (status == PCD_OK)
+        {
+            // 防碰撞，获取卡片ID
+            status = PCD_Anticoll(cardID);
+            if (status == PCD_OK)
+            {
+                // 格式化ID字符串
+                sprintf(idString, "ID: %02X %02X %02X %02X", cardID[0], cardID[1], cardID[2], cardID[3]);
+                
+                // 检查卡是否已注册
+                if (IsNFCCardRegistered(cardID))
+                {
+                    // 从Flash删除卡ID
+                    DelNFCCardFromFlash(cardID);
+                    
+                    // 显示删除成功
+                    OLED_Clear();
+                    OLED_ShowString(0, 0, (uint8_t*)"Card Deleted", 8, 1);
+                    OLED_ShowString(0, 8, (uint8_t*)idString, 8, 1);
+                    OLED_Refresh();
+                    HAL_Delay(2000);
+                }
+                else
+                {
+                    // 显示卡片未注册
+                    OLED_Clear();
+                    OLED_ShowString(0, 0, (uint8_t*)"Card Not Registered", 8, 1);
                     OLED_ShowString(0, 8, (uint8_t*)idString, 8, 1);
                     OLED_Refresh();
                     HAL_Delay(2000);
