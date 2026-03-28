@@ -55,6 +55,7 @@ volatile uint8_t ble_disconnected = 0;
 volatile uint8_t add_nfc_flag = 0;
 volatile uint8_t del_nfc_flag = 0;
 volatile uint8_t add_finger_flag = 0;
+volatile uint8_t del_finger_flag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,6 +68,7 @@ void AddNFCCardMode(void);
 void DelNFCCardMode(void);
 void DelNFCCardFromFlash(uint8_t *cardID);
 void AddFingerMode(void);
+void DelFingerMode(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -238,6 +240,22 @@ int main(void)
       
       // 进入添加指纹模式
       AddFingerMode();
+    }
+    
+    // 处理删除指纹标志
+    if (del_finger_flag)
+    {
+      // 显示删除指纹界面
+      OLED_Clear();
+      OLED_ShowString(0, 0, (uint8_t*)"Delete Fingerprint", 8, 1);
+      OLED_ShowString(0, 8, (uint8_t*)"Please place finger", 8, 1);
+      OLED_Refresh();
+      
+      // 清除标志位
+      del_finger_flag = 0;
+      
+      // 进入删除指纹模式
+      DelFingerMode();
     }
     
     // 保留RC522功能
@@ -710,6 +728,77 @@ void AddFingerMode(void)
         OLED_Clear();
         OLED_ShowString(0, 0, (uint8_t*)"Registration", 8, 1);
         OLED_ShowString(0, 8, (uint8_t*)"failed", 8, 1);
+        OLED_Refresh();
+        HAL_Delay(2000);
+    }
+    
+    // 显示主页面
+    OLED_Clear();
+    OLED_ShowString(0, 0, (uint8_t*)"Wait for NFC card", 8, 1);
+    OLED_ShowString(0, 8, (uint8_t*)"Wait for fingerprint", 8, 1);
+    OLED_Refresh();
+}
+
+// 删除指纹模式
+void DelFingerMode(void)
+{
+    uint8_t status;
+    uint16_t pageID, score;
+    
+    // 采集指纹图像
+    while (1)
+    {
+        status = AS608_GetImage();
+        if (status == AS608_ACK_OK)
+        {
+            break; // 采集成功
+        }
+        HAL_Delay(500);
+    }
+    
+    // 提取特征
+    status = AS608_GenChar(1); // 1表示第一缓冲区
+    if (status != AS608_ACK_OK)
+    {
+        OLED_Clear();
+        OLED_ShowString(0, 0, (uint8_t*)"Feature extract", 8, 1);
+        OLED_ShowString(0, 8, (uint8_t*)"failed", 8, 1);
+        OLED_Refresh();
+        HAL_Delay(2000);
+        return;
+    }
+    
+    // 搜索指纹
+    status = AS608_Search(1, 0, 200, &pageID, &score);
+    if (status == AS608_ACK_OK)
+    {
+        // 找到指纹，删除它
+        status = AS608_DeleteChar(pageID, 1);
+        if (status == AS608_ACK_OK)
+        {
+            // 删除成功
+            OLED_Clear();
+            OLED_ShowString(0, 0, (uint8_t*)"Fingerprint", 8, 1);
+            OLED_ShowString(0, 8, (uint8_t*)"deleted", 8, 1);
+            OLED_Refresh();
+            HAL_Delay(2000);
+        }
+        else
+        {
+            // 删除失败
+            OLED_Clear();
+            OLED_ShowString(0, 0, (uint8_t*)"Delete", 8, 1);
+            OLED_ShowString(0, 8, (uint8_t*)"failed", 8, 1);
+            OLED_Refresh();
+            HAL_Delay(2000);
+        }
+    }
+    else
+    {
+        // 没有找到指纹
+        OLED_Clear();
+        OLED_ShowString(0, 0, (uint8_t*)"Fingerprint", 8, 1);
+        OLED_ShowString(0, 8, (uint8_t*)"not found", 8, 1);
         OLED_Refresh();
         HAL_Delay(2000);
     }

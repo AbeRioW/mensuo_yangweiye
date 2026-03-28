@@ -48,6 +48,7 @@ extern volatile uint8_t ble_disconnected;
 extern volatile uint8_t add_nfc_flag;
 extern volatile uint8_t del_nfc_flag;
 extern volatile uint8_t add_finger_flag;
+extern volatile uint8_t del_finger_flag;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -336,6 +337,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 else if (strstr((char*)USART2_RX_BUF, "add finger"))
                 {
                     add_finger_flag = 1;
+                    // 清空接收缓冲区
+                    memset(USART2_RX_BUF, 0, USART2_MAX_RECV_LEN);
+                    // 重置接收状态
+                    USART2_RX_STA = 0;
+                }
+                
+                // 检查是否接收到"del finger"
+                else if (strstr((char*)USART2_RX_BUF, "del finger"))
+                {
+                    del_finger_flag = 1;
                     // 清空接收缓冲区
                     memset(USART2_RX_BUF, 0, USART2_MAX_RECV_LEN);
                     // 重置接收状态
