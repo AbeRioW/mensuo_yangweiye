@@ -108,7 +108,8 @@ int main(void)
   OLED_ShowString(0,0,(uint8_t*)"Initializing...",8,1);
   OLED_Refresh();
   HAL_Delay(1000);
-  
+   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET); // LAY1连接到PB13
+	 HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET); // LAY1连接到PB13
   PCD_Init(); // 初始化RC522
   AS608_Init(); // 初始化AS608
   
@@ -227,15 +228,30 @@ int main(void)
         // 检查是否已注册
         if (IsNFCCardRegistered(cardID))
         {
-          OLED_ShowString(0, 16, (uint8_t*)"Registered", 8, 1);
+          OLED_ShowString(0, 16, (uint8_t*)"Access Granted", 8, 1);
+          
+          // 拉高LAY1使得继电器工作
+          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET); // LAY1连接到PB13
+          
+          OLED_Refresh();
+          HAL_Delay(3000); // 3秒后关闭
+          
+          // 关闭继电器
+          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
         }
         else
         {
-          OLED_ShowString(0, 16, (uint8_t*)"Not Registered", 8, 1);
+          OLED_ShowString(0, 16, (uint8_t*)"Access Denied", 8, 1);
+          
+          // 拉低beep工作
+          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET); // beep连接到PB15
+          
+          OLED_Refresh();
+          HAL_Delay(3000); // 3秒后关闭
+          
+          // 关闭蜂鸣器
+          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET);
         }
-        
-        OLED_Refresh();
-        HAL_Delay(1000);
         
         // 显示主页面
         OLED_Clear();
@@ -265,8 +281,45 @@ int main(void)
         char idStr[16];
         sprintf(idStr, "ID: %d", fingerID);
         OLED_ShowString(0, 8, (uint8_t*)idStr, 8, 1);
+        
+        // 检查指纹是否已保存
+        // 这里假设AS608_VerifyFinger返回ACK_OK表示指纹已保存
+        OLED_ShowString(0, 16, (uint8_t*)"Access Granted", 8, 1);
+        
+        // 拉高LAY1使得继电器工作
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET); // LAY1连接到PB13
+        
         OLED_Refresh();
-        HAL_Delay(1000);
+        HAL_Delay(3000); // 3秒后关闭
+        
+        // 关闭继电器
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
+        
+        // 显示主页面
+        OLED_Clear();
+        OLED_ShowString(0, 0, (uint8_t*)"Wait for NFC card", 8, 1);
+        OLED_ShowString(0, 8, (uint8_t*)"Wait for fingerprint", 8, 1);
+        OLED_Refresh();
+      }
+      else if (fingerResult == AS608_ACK_NO_FINGER)
+      {
+        // 没有检测到指纹，不做处理
+      }
+      else
+      {
+        // 指纹未保存
+        OLED_Clear();
+        OLED_ShowString(0, 0, (uint8_t*)"Finger Not Found", 8, 1);
+        OLED_ShowString(0, 8, (uint8_t*)"Access Denied", 8, 1);
+        
+        // 拉低beep工作
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET); // beep连接到PB15
+        
+        OLED_Refresh();
+        HAL_Delay(3000); // 3秒后关闭
+        
+        // 关闭蜂鸣器
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET);
         
         // 显示主页面
         OLED_Clear();
@@ -350,19 +403,20 @@ uint8_t IsNFCCardRegistered(uint8_t *cardID)
 {
     for (uint8_t i = 0; i < nfcCardCount; i++)
     {
-        if (memcmp(cardID, nfcCards[i], NFC_CARD_SIZE) == 0)
+        if (memcmp(nfcCards[i], cardID, NFC_CARD_SIZE) == 0)
         {
-            return 1; // 已注册
+            return 1; // 卡已注册
         }
     }
-    return 0; // 未注册
+    return 0; // 卡未注册
 }
 
-// 保存NFC卡到Flash
+// 保存NFC卡ID到Flash
 void SaveNFCCardToFlash(uint8_t *cardID)
 {
     if (nfcCardCount < MAX_NFC_CARDS)
     {
+        // 复制卡ID到数组
         memcpy(nfcCards[nfcCardCount], cardID, NFC_CARD_SIZE);
         nfcCardCount++;
         
@@ -373,17 +427,13 @@ void SaveNFCCardToFlash(uint8_t *cardID)
 // 添加NFC卡模式
 void AddNFCCardMode(void)
 {
-    // 读取已保存的NFC卡数据
-    ReadNFCCardsFromFlash();
-    
-    // 等待用户靠近NFC卡
     uint8_t status;
     uint8_t cardType;
     uint8_t cardID[4];
     char idString[16];
     
-    uint32_t startTime = HAL_GetTick();
-    while (HAL_GetTick() - startTime < 10000) // 10秒超时
+    // 等待用户靠近NFC卡
+    while (1)
     {
         // 寻找卡片
         status = PCD_Request(PICC_REQIDL, &cardType);
@@ -396,55 +446,43 @@ void AddNFCCardMode(void)
                 // 格式化ID字符串
                 sprintf(idString, "ID: %02X %02X %02X %02X", cardID[0], cardID[1], cardID[2], cardID[3]);
                 
-                // 检查是否已注册
+                // 检查卡是否已注册
                 if (IsNFCCardRegistered(cardID))
                 {
                     // 显示已注册
                     OLED_Clear();
-                    OLED_ShowString(0, 0, (uint8_t*)"Card Detected", 8, 1);
+                    OLED_ShowString(0, 0, (uint8_t*)"Card Already Registered", 8, 1);
                     OLED_ShowString(0, 8, (uint8_t*)idString, 8, 1);
-                    OLED_ShowString(0, 16, (uint8_t*)"Already Registered", 8, 1);
                     OLED_Refresh();
                     HAL_Delay(2000);
                 }
                 else
                 {
-                    // 保存到Flash
+                    // 保存卡ID到Flash
                     SaveNFCCardToFlash(cardID);
                     
-                    // 显示保存成功
+                    // 显示注册成功
                     OLED_Clear();
-                    OLED_ShowString(0, 0, (uint8_t*)"Card Detected", 8, 1);
+                    OLED_ShowString(0, 0, (uint8_t*)"Card Registered", 8, 1);
                     OLED_ShowString(0, 8, (uint8_t*)idString, 8, 1);
-                    OLED_ShowString(0, 16, (uint8_t*)"Saved Successfully", 8, 1);
                     OLED_Refresh();
                     HAL_Delay(2000);
                 }
                 
-                // 退出添加模式，返回主页面
+                // 显示主页面
                 OLED_Clear();
                 OLED_ShowString(0, 0, (uint8_t*)"Wait for NFC card", 8, 1);
                 OLED_ShowString(0, 8, (uint8_t*)"Wait for fingerprint", 8, 1);
                 OLED_Refresh();
-                return;
+                break;
             }
         }
         
         HAL_Delay(100);
     }
-    
-    // 超时，返回主页面
-    OLED_Clear();
-    OLED_ShowString(0, 0, (uint8_t*)"Timeout", 8, 1);
-    OLED_ShowString(0, 8, (uint8_t*)"No card detected", 8, 1);
-    OLED_Refresh();
-    HAL_Delay(2000);
-    
-    OLED_Clear();
-    OLED_ShowString(0, 0, (uint8_t*)"Wait for NFC card", 8, 1);
-    OLED_ShowString(0, 8, (uint8_t*)"Wait for fingerprint", 8, 1);
-    OLED_Refresh();
 }
+
+/* USER CODE END 4 */
 
 /**
   * @brief  This function is executed in case of error occurrence.
