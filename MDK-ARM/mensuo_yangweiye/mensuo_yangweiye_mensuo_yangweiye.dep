@@ -1,8 +1,8 @@
 Dependencies for Project 'mensuo_yangweiye', Target 'mensuo_yangweiye': (DO NOT MODIFY !)
 CompilerVersion: 5060750::V5.06 update 6 (build 750)::.\ARMCC
-F (startup_stm32f103xb.s)(0x69C79994)(--cpu Cortex-M3 -g --apcs=interwork -I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include--pd "__UVISION_VERSION SETA 538" --pd "_RTE_ SETA 1" --pd "STM32F10X_MD SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f103xb.lst --xref -o mensuo_yangweiye\startup_stm32f103xb.o --depend mensuo_yangweiye\startup_stm32f103xb.d)
-F (../Core/Src/main.c)(0x69C7A15F)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\main.o --omf_browse mensuo_yangweiye\main.crf --depend mensuo_yangweiye\main.d)
-I (../Core/Inc/main.h)(0x69C79993)
+F (startup_stm32f103xb.s)(0x69C7A2F4)(--cpu Cortex-M3 -g --apcs=interwork -I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include--pd "__UVISION_VERSION SETA 538" --pd "_RTE_ SETA 1" --pd "STM32F10X_MD SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f103xb.lst --xref -o mensuo_yangweiye\startup_stm32f103xb.o --depend mensuo_yangweiye\startup_stm32f103xb.d)
+F (../Core/Src/main.c)(0x69C7A472)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\main.o --omf_browse mensuo_yangweiye\main.crf --depend mensuo_yangweiye\main.d)
+I (../Core/Inc/main.h)(0x69C7A2F3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69A3C6A1)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69C7848C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x69A3C6A1)
@@ -40,9 +40,9 @@ I (../App/RC522.h)(0x69C4D877)
 I (../App/AS608.h)(0x69C784DE)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5D9B3488)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5D9B348A)
-F (../Core/Src/gpio.c)(0x69C79993)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\gpio.o --omf_browse mensuo_yangweiye\gpio.crf --depend mensuo_yangweiye\gpio.d)
+F (../Core/Src/gpio.c)(0x69C7A2F2)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\gpio.o --omf_browse mensuo_yangweiye\gpio.crf --depend mensuo_yangweiye\gpio.d)
 I (../Core/Inc/gpio.h)(0x69C78179)
-I (../Core/Inc/main.h)(0x69C79993)
+I (../Core/Inc/main.h)(0x69C7A2F3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69A3C6A1)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69C7848C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x69A3C6A1)
@@ -73,7 +73,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x69A3C6A1)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69A3C6A1)
 F (../Core/Src/adc.c)(0x69C78179)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\adc.o --omf_browse mensuo_yangweiye\adc.crf --depend mensuo_yangweiye\adc.d)
 I (../Core/Inc/adc.h)(0x69C78179)
-I (../Core/Inc/main.h)(0x69C79993)
+I (../Core/Inc/main.h)(0x69C7A2F3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69A3C6A1)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69C7848C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x69A3C6A1)
@@ -104,7 +104,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x69A3C6A1)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69A3C6A1)
 F (../Core/Src/spi.c)(0x69C782BB)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\spi.o --omf_browse mensuo_yangweiye\spi.crf --depend mensuo_yangweiye\spi.d)
 I (../Core/Inc/spi.h)(0x69C782BB)
-I (../Core/Inc/main.h)(0x69C79993)
+I (../Core/Inc/main.h)(0x69C7A2F3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69A3C6A1)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69C7848C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x69A3C6A1)
@@ -135,7 +135,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h)(0x69A3C6A1)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69A3C6A1)
 F (../Core/Src/usart.c)(0x69C78BBE)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\usart.o --omf_browse mensuo_yangweiye\usart.crf --depend mensuo_yangweiye\usart.d)
 I (../Core/Inc/usart.h)(0x69C78B51)
-I (../Core/Inc/main.h)(0x69C79993)
+I (../Core/Inc/main.h)(0x69C7A2F3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69A3C6A1)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69C7848C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x69A3C6A1)
@@ -167,8 +167,8 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69A3C6A1)
 I (../App/as608.h)(0x69C784DE)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5D9B3488)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5D9B348A)
-F (../Core/Src/stm32f1xx_it.c)(0x69C7A12C)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\stm32f1xx_it.o --omf_browse mensuo_yangweiye\stm32f1xx_it.crf --depend mensuo_yangweiye\stm32f1xx_it.d)
-I (../Core/Inc/main.h)(0x69C79993)
+F (../Core/Src/stm32f1xx_it.c)(0x69C7A219)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\stm32f1xx_it.o --omf_browse mensuo_yangweiye\stm32f1xx_it.crf --depend mensuo_yangweiye\stm32f1xx_it.d)
+I (../Core/Inc/main.h)(0x69C7A2F3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69A3C6A1)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69C7848C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x69A3C6A1)
@@ -205,7 +205,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5D9B348A)
 I (../App/oled.h)(0x69C76FE9)
 I (../Core/Inc/gpio.h)(0x69C78179)
 F (../Core/Src/stm32f1xx_hal_msp.c)(0x69C78179)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\stm32f1xx_hal_msp.o --omf_browse mensuo_yangweiye\stm32f1xx_hal_msp.crf --depend mensuo_yangweiye\stm32f1xx_hal_msp.d)
-I (../Core/Inc/main.h)(0x69C79993)
+I (../Core/Inc/main.h)(0x69C7A2F3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69A3C6A1)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69C7848C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x69A3C6A1)
@@ -702,7 +702,7 @@ F (..\App\oled.c)(0x69C76FE9)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork -
 I (..\App\oled.h)(0x69C76FE9)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5D9B3488)
 I (../Core/Inc/gpio.h)(0x69C78179)
-I (../Core/Inc/main.h)(0x69C79993)
+I (../Core/Inc/main.h)(0x69C7A2F3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69A3C6A1)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69C7848C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x69A3C6A1)
@@ -733,7 +733,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69A3C6A1)
 I (..\App\oledfont.h)(0x69C76FE9)
 F (..\App\RC522.c)(0x69C4D877)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\rc522.o --omf_browse mensuo_yangweiye\rc522.crf --depend mensuo_yangweiye\rc522.d)
 I (..\App\RC522.h)(0x69C4D877)
-I (../Core/Inc/main.h)(0x69C79993)
+I (../Core/Inc/main.h)(0x69C7A2F3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69A3C6A1)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69C7848C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x69A3C6A1)
@@ -766,7 +766,7 @@ I (../Core/Inc/spi.h)(0x69C782BB)
 I (../Core/Inc/gpio.h)(0x69C78179)
 F (..\App\AS608.c)(0x69C7874C)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../App-I.\RTE\_mensuo_yangweiye-IC:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IC:\Users\Admin\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o mensuo_yangweiye\as608.o --omf_browse mensuo_yangweiye\as608.crf --depend mensuo_yangweiye\as608.d)
 I (..\App\AS608.h)(0x69C784DE)
-I (../Core/Inc/main.h)(0x69C79993)
+I (../Core/Inc/main.h)(0x69C7A2F3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69A3C6A1)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69C7848C)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x69A3C6A1)

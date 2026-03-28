@@ -56,6 +56,8 @@ volatile uint8_t add_nfc_flag = 0;
 volatile uint8_t del_nfc_flag = 0;
 volatile uint8_t add_finger_flag = 0;
 volatile uint8_t del_finger_flag = 0;
+volatile uint8_t beep_flag = 0;
+volatile uint8_t lay_flag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -256,6 +258,73 @@ int main(void)
       
       // 进入删除指纹模式
       DelFingerMode();
+    }
+    
+    // 处理蜂鸣器标志
+    if (beep_flag)
+    {
+      // 蜂鸣器拉低
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
+      // 延时3秒
+      HAL_Delay(3000);
+      // 蜂鸣器拉高
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET);
+      // 清除标志位
+      beep_flag = 0;
+    }
+    
+    // 处理LAY1标志
+    if (lay_flag)
+    {
+      // LAY1拉高
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_SET);
+      // 延时3秒
+      HAL_Delay(3000);
+      // LAY1拉低
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, GPIO_PIN_RESET);
+      // 清除标志位
+      lay_flag = 0;
+    }
+    
+    // 检测光照值
+    static uint32_t lastLightCheckTime = 0;
+    uint32_t lightCurrentTime = HAL_GetTick();
+    if (lightCurrentTime - lastLightCheckTime >= 1000) // 每秒检测一次
+    {
+      // 读取ADC1_IN9的值
+      HAL_ADC_Start(&hadc1);
+      HAL_ADC_PollForConversion(&hadc1, 100);
+      uint32_t adcValue = HAL_ADC_GetValue(&hadc1);
+      HAL_ADC_Stop(&hadc1);
+      
+      // 格式化光照值字符串
+      char lightString[20];
+      sprintf(lightString, "Light: %lu", adcValue);
+      
+      // 显示光照值
+      OLED_ShowString(0, 24, (uint8_t*)lightString, 8, 1);
+      OLED_Refresh();
+      
+      // 光照值过高处理
+      if (adcValue > 3000) // 假设3000为过高阈值
+      {
+        // 拉低LED工作
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET); // 假设LED连接到PB12
+        // 拉高LAY2
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET); // LAY2连接到PB14
+        // 延时3秒
+        HAL_Delay(3000);
+        // 拉低LAY2
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+      }
+      // 光照值过低处理
+      else if (adcValue < 1000) // 假设1000为过低阈值
+      {
+        // 拉高LED不工作
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET); // 假设LED连接到PB12
+      }
+      
+      lastLightCheckTime = lightCurrentTime;
     }
     
     // 保留RC522功能
