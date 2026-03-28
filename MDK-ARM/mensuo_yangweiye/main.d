@@ -35,6 +35,6 @@ mensuo_yangweiye\main.o: ../Core/Inc/usart.h
 mensuo_yangweiye\main.o: ../Core/Inc/gpio.h
 mensuo_yangweiye\main.o: ../App/oled.h
 mensuo_yangweiye\main.o: ../App/RC522.h
-mensuo_yangweiye\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 mensuo_yangweiye\main.o: ../App/AS608.h
 mensuo_yangweiye\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+mensuo_yangweiye\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

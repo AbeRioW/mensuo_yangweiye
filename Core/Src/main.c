@@ -27,9 +27,8 @@
 /* USER CODE BEGIN Includes */
 #include "oled.h"
 #include "RC522.h"
-#include "stdio.h"
-#include "usart.h"
 #include "AS608.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,6 +54,7 @@ volatile uint8_t ble_connected = 0;
 volatile uint8_t ble_disconnected = 0;
 volatile uint8_t add_nfc_flag = 0;
 volatile uint8_t del_nfc_flag = 0;
+volatile uint8_t add_finger_flag = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -66,6 +66,7 @@ void SaveNFCCardToFlash(uint8_t *cardID);
 void AddNFCCardMode(void);
 void DelNFCCardMode(void);
 void DelNFCCardFromFlash(uint8_t *cardID);
+void AddFingerMode(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -221,6 +222,22 @@ int main(void)
       
       // 进入删除NFC卡模式
       DelNFCCardMode();
+    }
+    
+    // 处理添加指纹标志
+    if (add_finger_flag)
+    {
+      // 显示添加指纹界面
+      OLED_Clear();
+      OLED_ShowString(0, 0, (uint8_t*)"Add Fingerprint", 8, 1);
+      OLED_ShowString(0, 8, (uint8_t*)"Please place finger", 8, 1);
+      OLED_Refresh();
+      
+      // 清除标志位
+      add_finger_flag = 0;
+      
+      // 进入添加指纹模式
+      AddFingerMode();
     }
     
     // 保留RC522功能
@@ -577,6 +594,131 @@ void DelNFCCardMode(void)
         
         HAL_Delay(100);
     }
+}
+
+// 添加指纹模式
+void AddFingerMode(void)
+{
+    uint16_t id = 0;
+    uint8_t status;
+    uint16_t pageID, score;
+    
+    // 查找可用的指纹ID
+    for (id = 0; id < 200; id++)
+    {
+        // 尝试搜索当前ID，如果没有找到则认为该ID可用
+        status = AS608_Search(1, id, 1, &pageID, &score);
+        if (status != AS608_ACK_OK)
+        {
+            break; // 找到可用的ID
+        }
+    }
+    
+    if (id >= 200)
+    {
+        // 没有可用的ID
+        OLED_Clear();
+        OLED_ShowString(0, 0, (uint8_t*)"No space", 8, 1);
+        OLED_ShowString(0, 8, (uint8_t*)"for new fingerprint", 8, 1);
+        OLED_Refresh();
+        HAL_Delay(2000);
+        return;
+    }
+    
+    // 第一步：采集指纹
+    OLED_Clear();
+    OLED_ShowString(0, 0, (uint8_t*)"Place finger", 8, 1);
+    OLED_ShowString(0, 8, (uint8_t*)"First time", 8, 1);
+    OLED_Refresh();
+    
+    while (1)
+    {
+        status = AS608_GetImage();
+        if (status == AS608_ACK_OK)
+        {
+            break; // 采集成功
+        }
+        HAL_Delay(500);
+    }
+    
+    // 提取特征
+    status = AS608_GenChar(1); // 1表示第一缓冲区
+    if (status != AS608_ACK_OK)
+    {
+        OLED_Clear();
+        OLED_ShowString(0, 0, (uint8_t*)"Feature extract", 8, 1);
+        OLED_ShowString(0, 8, (uint8_t*)"failed", 8, 1);
+        OLED_Refresh();
+        HAL_Delay(2000);
+        return;
+    }
+    
+    // 第二步：再次采集指纹
+    OLED_Clear();
+    OLED_ShowString(0, 0, (uint8_t*)"Place finger", 8, 1);
+    OLED_ShowString(0, 8, (uint8_t*)"Second time", 8, 1);
+    OLED_Refresh();
+    
+    while (1)
+    {
+        status = AS608_GetImage();
+        if (status == AS608_ACK_OK)
+        {
+            break; // 采集成功
+        }
+        HAL_Delay(500);
+    }
+    
+    // 提取特征
+    status = AS608_GenChar(2); // 2表示第二缓冲区
+    if (status != AS608_ACK_OK)
+    {
+        OLED_Clear();
+        OLED_ShowString(0, 0, (uint8_t*)"Feature extract", 8, 1);
+        OLED_ShowString(0, 8, (uint8_t*)"failed", 8, 1);
+        OLED_Refresh();
+        HAL_Delay(2000);
+        return;
+    }
+    
+    // 合并特征
+    status = AS608_RegModel();
+    if (status != AS608_ACK_OK)
+    {
+        OLED_Clear();
+        OLED_ShowString(0, 0, (uint8_t*)"Model merge", 8, 1);
+        OLED_ShowString(0, 8, (uint8_t*)"failed", 8, 1);
+        OLED_Refresh();
+        HAL_Delay(2000);
+        return;
+    }
+    
+    // 保存指纹
+    status = AS608_StoreChar(1, id);
+    if (status == AS608_ACK_OK)
+    {
+        // 注册成功
+        OLED_Clear();
+        OLED_ShowString(0, 0, (uint8_t*)"Fingerprint", 8, 1);
+        OLED_ShowString(0, 8, (uint8_t*)"registered", 8, 1);
+        OLED_Refresh();
+        HAL_Delay(2000);
+    }
+    else
+    {
+        // 注册失败
+        OLED_Clear();
+        OLED_ShowString(0, 0, (uint8_t*)"Registration", 8, 1);
+        OLED_ShowString(0, 8, (uint8_t*)"failed", 8, 1);
+        OLED_Refresh();
+        HAL_Delay(2000);
+    }
+    
+    // 显示主页面
+    OLED_Clear();
+    OLED_ShowString(0, 0, (uint8_t*)"Wait for NFC card", 8, 1);
+    OLED_ShowString(0, 8, (uint8_t*)"Wait for fingerprint", 8, 1);
+    OLED_Refresh();
 }
 
 /* USER CODE END 4 */
